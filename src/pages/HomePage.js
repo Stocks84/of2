@@ -1,27 +1,45 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import NavBar from "../components/NavBar"; // Assuming NavBar is in components folder
+import GameCard from "../components/GameCard"; // Import the GameCard component
+
+const sampleGames = [
+  {
+    id: 1,
+    title: "Kings Cup",
+    description: "A classic drinking game with cards.",
+    rules: "Each card has a rule, last king drinks the cup.",
+  },
+  {
+    id: 2,
+    title: "Beer Pong",
+    description: "Throw a ball into the cup!",
+    rules: "Make a shot, other team drinks.",
+  },
+  {
+    id: 3,
+    title: "Flip Cup",
+    description: "Teams race to flip their cups after drinking.",
+    rules: "Drink, flip, pass. First team wins!",
+  },
+];
 
 const HomePage = () => {
-    return (
-      <Container className="mt-4">
-        <h2 className="text-center">Welcome to OldFashion</h2>
-        <p className="text-center">Explore fun drinking games below!</p>
-        
-        {/* Placeholder for games grid */}
-        <Row className="mt-3">
-          {[1, 2, 3, 4].map((game) => (
-            <Col key={game} xs={12} md={6} lg={4} className="mb-4">
-              <div className="p-3 border rounded text-center">
-                <h5>Game {game}</h5>
-                <p>Coming soon...</p>
-              </div>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-    );
-  };
-  
+  return (
+    <Container>
+      <h1 className="text-center my-4">Drinking Games</h1>
+      <Row>
+        {sampleGames.map((game) => (
+          <Col key={game.id} sm={12} md={6} lg={4}>
+            <GameCard
+              title={game.title}
+              description={game.description}
+              rules={game.rules}
+            />
+          </Col>
+        ))}
+      </Row>
+    </Container>
+  );
+};
 
 export default HomePage;
