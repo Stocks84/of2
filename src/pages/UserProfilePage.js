@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUserProfile, updateUserProfile, deleteUserAccount } from '../services/userService';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -7,9 +8,16 @@ const UserProfilePage = () => {
     const [error, setError] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserProfile = async () => {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                navigate('/login'); // ✅ Redirect to login if token is missing
+                return;
+            }
+
             try {
                 const profileData = await getUserProfile();
                 setUser(profileData);
@@ -21,7 +29,7 @@ const UserProfilePage = () => {
             }
         };
         fetchUserProfile();
-    }, []);
+    }, [navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -46,8 +54,8 @@ const UserProfilePage = () => {
             try {
                 await deleteUserAccount();
                 alert("Account deleted successfully.");
-                // Redirect user after deletion
-                window.location.href = "/";
+                localStorage.removeItem('access_token'); //Remove token after deletion
+                navigate("/"); // Redirect after deleting account
             } catch (err) {
                 alert("Failed to delete account.");
             }
@@ -63,19 +71,19 @@ const UserProfilePage = () => {
             {!editMode ? (
                 <div>
                     <p><strong>Username:</strong> {user.username}</p>
-                    <p><strong>First Name:</strong> {user.first_name}</p>
-                    <p><strong>Last Name:</strong> {user.last_name}</p>
+                    <p><strong>Bio:</strong> {user.bio}</p>
                     <p><strong>Location:</strong> {user.location}</p>
                     <p><strong>Favorite Drink:</strong> {user.favorite_drink}</p>
                     <button onClick={() => setEditMode(true)}>Edit Profile</button>
                 </div>
             ) : (
                 <form onSubmit={handleSubmit}>
-                    <label>First Name:</label>
-                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} />
+                    
+                    <label>Username:</label>
+                    <input type="text" name="username" value={formData.username} onChange={handleChange} />
 
-                    <label>Last Name:</label>
-                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} />
+                    <label>Bio:</label>
+                    <input type="text" name="bio" value={formData.bio} onChange={handleChange} />
 
                     <label>Location:</label>
                     <input type="text" name="location" value={formData.location} onChange={handleChange} />
@@ -84,7 +92,7 @@ const UserProfilePage = () => {
                     <input type="text" name="favorite_drink" value={formData.favorite_drink} onChange={handleChange} />
 
                     <button type="submit">Save Changes</button>
-                    <button onClick={() => setEditMode(false)}>Cancel</button>
+                    <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
                 </form>
             )}
             <button onClick={handleDelete} style={{ color: "red" }}>Delete Account</button>

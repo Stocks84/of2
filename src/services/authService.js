@@ -6,6 +6,10 @@ export const loginUser = async (credentials) => {
         const response = await api.post('/api/token/', credentials);
         localStorage.setItem('accessToken', response.data.access);
         localStorage.setItem('refreshToken', response.data.refresh);
+
+        // Dispatch global login event
+        window.dispatchEvent(new Event("authChanged"));
+
         return response.data;
     } catch (error) {
         console.error("Login failed:", error);
@@ -13,21 +17,24 @@ export const loginUser = async (credentials) => {
     }
 };
 
-// User signup
-export const signUpUser = async (userData) => {
+// User signup 
+export const registerUser = async (userData) => {
     try {
-        const response = await api.post('/api/signup/', userData);
-        return response.data;
+      const response = await api.post("/api/register/", userData);
+      return response.data;
     } catch (error) {
-        console.error("Signup failed:", error);
-        throw error;
+      throw error.response?.data || { detail: "Something went wrong" };
     }
-};
+  };
+
 
 // User logout
 export const logoutUser = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+
+    // Dispatch global logout event
+    window.dispatchEvent(new Event("authChanged"));
 };
 
 // Check if user is authenticated
