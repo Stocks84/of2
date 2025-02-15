@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import GameCard from "../components/GameCard"; // Import the GameCard component
+import GameCard from "../components/GameCard";
+
 
 const sampleGames = [
   {
