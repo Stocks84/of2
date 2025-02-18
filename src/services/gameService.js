@@ -1,6 +1,6 @@
 import api from './api';
 
-const API_URL = "http://127.0.0.1:8000/api/games";
+const API_URL = "http://127.0.0.1:8000/api/games/";
 
 const gameService = {
   getGames: async (page = 1, limit = 10) => {
@@ -13,12 +13,14 @@ const gameService = {
     }
   },
 
-  getGameById: async (gameId) => {
+  getGameById: async (id) => {
     try {
-      const response = await api.get(`${API_URL}${gameId}/`);
+      if (!id) throw new Error("Game ID is required.")
+      console.log(`Fetching game details for ID:`, id);
+      const response = await api.get(`${API_URL}${id}/`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching game with ID ${gameId}:`, error);
+      console.error(`Error fetching game with ID ${id}:`, error);
       throw error;
     }
   },

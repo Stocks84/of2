@@ -44,7 +44,7 @@ const NavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
-            <Nav.Link as={Link} to="/games">Games</Nav.Link>
+            <Nav.Link as={Link} to="/games/:id">Games</Nav.Link>
 
             {loggedIn ? (
               <>

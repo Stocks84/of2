@@ -45,7 +45,7 @@ const HomePage = () => {
       <Row>
         {games.map((game) => (
           <Col key={game.id} md={4} sm={6} xs={12} className="mb-3">
-            <GameCard title={game.title} description={game.description} />
+            <GameCard id={game.id} title={game.title} description={game.description} />
           </Col>
         ))}
       </Row>

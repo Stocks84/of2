@@ -13,7 +13,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/games" element={<GameDetailsPage />} />
+        <Route path="/games/:id" element={<GameDetailsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/signup" element={<SignUpPage />} />
