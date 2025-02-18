@@ -56,6 +56,7 @@ const NavBar = () => {
             ) : (
               <Nav.Link as={Link} to="/login">Login</Nav.Link>
             )}
+            <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

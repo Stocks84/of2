@@ -1,44 +1,62 @@
-import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import gameService from "../services/gameService";
 import GameCard from "../components/GameCard";
 
-
-const sampleGames = [
-  {
-    id: 1,
-    title: "Kings Cup",
-    description: "A classic drinking game with cards.",
-    rules: "Each card has a rule, last king drinks the cup.",
-  },
-  {
-    id: 2,
-    title: "Beer Pong",
-    description: "Throw a ball into the cup!",
-    rules: "Make a shot, other team drinks.",
-  },
-  {
-    id: 3,
-    title: "Flip Cup",
-    description: "Teams race to flip their cups after drinking.",
-    rules: "Drink, flip, pass. First team wins!",
-  },
-];
-
 const HomePage = () => {
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
+
+  const fetchGames = async (nextPage = 1) => {
+    try {
+      setLoading(true);
+      const response = await gameService.getGames(nextPage, 6);
+  
+      setGames((prevGames) => {
+        const existingIds = new Set(prevGames.map(game => game.id));
+        const newGames = response.results.filter(game => !existingIds.has(game.id));
+        return [...prevGames, ...newGames];  // Avoid duplicates
+      });
+  
+      setHasMore(response.next !== null);
+    } catch (error) {
+      setError("Failed to load games. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMoreGames = () => {
+    setPage((prevPage) => prevPage + 1);
+    fetchGames(page + 1);
+  };
+
   return (
-    <Container>
-      <h1 className="text-center my-4">Drinking Games</h1>
+    <Container className="mt-4">
+      <h2 className="mb-4">Drinking Games</h2>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Row>
-        {sampleGames.map((game) => (
-          <Col key={game.id} sm={12} md={6} lg={4}>
-            <GameCard
-              title={game.title}
-              description={game.description}
-              rules={game.rules}
-            />
+        {games.map((game) => (
+          <Col key={game.id} md={4} sm={6} xs={12} className="mb-3">
+            <GameCard title={game.title} description={game.description} />
           </Col>
         ))}
       </Row>
+      {loading && <Spinner animation="border" />}
+      {hasMore && !loading && (
+        <div className="text-center mt-3">
+          <Button onClick={loadMoreGames} variant="primary">
+            Load More
+          </Button>
+        </div>
+      )}
     </Container>
   );
 };
