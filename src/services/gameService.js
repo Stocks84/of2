@@ -27,10 +27,17 @@ const gameService = {
 
   createGame: async (gameData) => {
     try {
-      const response = await api.post(`${API_URL}`, gameData);
+      console.log("Sending game data:", gameData);
+
+      const response = await api.post(`${API_URL}`, gameData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       return response.data;
     } catch (error) {
-      console.error('Error creating game:', error);
+      console.error('Error creating game:', error.response?.data || error);
       throw error;
     }
   },

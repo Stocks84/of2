@@ -1,5 +1,6 @@
 import api from './api';
 
+
 // User login
 export const loginUser = async (credentials) => {
     try {
@@ -8,19 +9,23 @@ export const loginUser = async (credentials) => {
         console.log("Login response:", response.data);
 
         if (response.data.access && response.data.refresh) {
-          localStorage.setItem('accessToken', response.data.access);
-          localStorage.setItem('refreshToken', response.data.refresh);
+          localStorage.setItem('access_token', response.data.access);
+          localStorage.setItem('refresh_token', response.data.refresh);
           console.log("Tokens saved to localStorage!");
         } else {
-          console.error("Missing access or refresh token in response!");
+          console.error("Login response missing tokens:", response.data);
         }
 
+        const userProfile = await api.get("/api/profile", {
+          headers: { "Authorization": `Bearer ${response.data.access}` }
+        });
+        
         // Dispatch global login event
         window.dispatchEvent(new Event("authChanged"));
 
         return response.data;
     } catch (error) {
-        console.error("Login failed:", error);
+        console.error("Login failed:", error.response?.data || error);
         throw error;
     }
 };
@@ -38,8 +43,8 @@ export const registerUser = async (userData) => {
 
 // User logout
 export const logoutUser = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
 
     // Dispatch global logout event
     window.dispatchEvent(new Event("authChanged"));
@@ -47,5 +52,6 @@ export const logoutUser = () => {
 
 // Check if user is authenticated
 export const isAuthenticated = () => {
-    return !!localStorage.getItem('accessToken');
+    return !!localStorage.getItem('access_token');
 };
+
