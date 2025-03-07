@@ -25,6 +25,40 @@ const gameService = {
     }
   },
 
+  getUserProfile: async () => {
+    try {
+      console.log("Fetching user profile...");
+      const response = await api.get("http://127.0.0.1:8000/api/profile/"); // Adjust the endpoint if needed
+      console.log("User profile Response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  },
+  
+  getUserGames: async () => {
+    try {
+      console.log("Fetching only the user's games...");
+      const response = await api.get("http://127.0.0.1:8000/api/games/", {
+        params: { user_games: "true" }, // Ensure correct query param
+      });
+  
+      console.log("Full API Response:", response.data);
+  
+      if (response.data.results && Array.isArray(response.data.results)) {
+        return response.data.results; // Extract only the array
+      } else {
+        console.error("Unexpected response format:", response.data);
+        return []; // Return an empty array to avoid .map() errors
+      }
+    } catch (error) {
+      console.error("Error fetching user's games:", error);
+      throw error;
+    }
+  },
+  
+
   createGame: async (gameData) => {
     try {
       console.log("Sending game data:", gameData);

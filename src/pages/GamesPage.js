@@ -12,27 +12,36 @@ const GamesPage = () => {
   const [userId, setUserId] = useState(null); // Store logged-in user's ID
 
   useEffect(() => {
-    fetchGames();
+    if (userLoggedIn) {
+      fetchUserGames();
+    }
   }, [userLoggedIn]);
 
-  const fetchGames = async () => {
+  const fetchUserGames = async () => {
     try {
       setLoading(true);
-      const allGames = await gameService.getGames();
+      console.log("Fetching user games...");
 
-      if (userLoggedIn) {
-        // Fetch the user's profile to get their ID
-        const userProfile = await gameService.getUserProfile();
-        setUserId(userProfile.id);
+      // Fetch only the user's games directly
+      const userGames = await gameService.getUserGames();
 
-        // Filter only the user's games
-        const userGames = allGames.results.filter(game => game.creator === userProfile.id);
-        setGames(userGames);
-      } else {
-        // Show all games for logged-out users
-        setGames(allGames.results);
+      console.log("API Response (user games):", userGames);
+      
+      if (!Array.isArray(userGames)) {
+        console.error("Error: Expected an array, but got:", userGames);
+        setError("Invalid API response format.");
+        return;
       }
+
+      setGames(userGames);
+
+      // Fetch user profile to get their ID (only once)
+      const userProfile = await gameService.getUserProfile();
+      setUserId(userProfile.id);
+
+      console.log("User Games Fetched:", userGames);
     } catch (error) {
+      console.error("Error fetching user's games:", error);
       setError("Failed to load games.");
     } finally {
       setLoading(false);
@@ -46,10 +55,11 @@ const GamesPage = () => {
 
     try {
       const createdGame = await gameService.createGame(newGame);
-      console.log("Game created:", createdGame);
-      setGames([...games, createdGame]);
+      console.log("Game Created:", createdGame);
+      setGames([...games, createdGame]); // Update state with new game
       setNewGame({ title: "", description: "" });
     } catch (error) {
+      console.error("Failed to create game:", error);
       setError("Failed to create game.");
     }
   };
@@ -57,17 +67,16 @@ const GamesPage = () => {
   const handleDeleteGame = async (gameId) => {
     try {
       await gameService.deleteGame(gameId);
-      setGames(games.filter(game => game.id !== gameId));
+      setGames(games.filter((game) => game.id !== gameId)); // Remove from state
     } catch (error) {
+      console.error("Failed to delete game:", error);
       setError("Failed to delete game.");
     }
   };
 
   return (
     <Container>
-      <h2 className="mt-4">
-        {userLoggedIn ? "My Games" : "All Games"}
-      </h2>
+      <h2 className="mt-4">My Games</h2>
 
       {/* Show the form only if logged in */}
       {userLoggedIn && (
@@ -110,7 +119,7 @@ const GamesPage = () => {
                   <Card.Text>{game.description}</Card.Text>
 
                   {/* Show delete button only if logged in and it's the user's game */}
-                  {userLoggedIn && game.owner === userId && (
+                  {userLoggedIn && game.creator === userId && ( // Use 'creator' not 'owner'
                     <Button variant="danger" onClick={() => handleDeleteGame(game.id)}>
                       Delete
                     </Button>
@@ -128,4 +137,5 @@ const GamesPage = () => {
 };
 
 export default GamesPage;
+
 
