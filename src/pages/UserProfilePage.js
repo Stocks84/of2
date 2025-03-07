@@ -10,6 +10,9 @@ const UserProfilePage = () => {
     const [formData, setFormData] = useState({});
     const navigate = useNavigate();
 
+
+    console.log("Access token:", localStorage.getItem("access_token"));
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             const token = localStorage.getItem('access_token');
@@ -29,7 +32,7 @@ const UserProfilePage = () => {
             }
         };
         fetchUserProfile();
-    }, [navigate]);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({

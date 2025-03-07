@@ -4,8 +4,16 @@ import api from './api';
 export const loginUser = async (credentials) => {
     try {
         const response = await api.post('/api/token/', credentials);
-        localStorage.setItem('accessToken', response.data.access);
-        localStorage.setItem('refreshToken', response.data.refresh);
+
+        console.log("Login response:", response.data);
+
+        if (response.data.access && response.data.refresh) {
+          localStorage.setItem('accessToken', response.data.access);
+          localStorage.setItem('refreshToken', response.data.refresh);
+          console.log("Tokens saved to localStorage!");
+        } else {
+          console.error("Missing access or refresh token in response!");
+        }
 
         // Dispatch global login event
         window.dispatchEvent(new Event("authChanged"));
