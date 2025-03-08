@@ -51,13 +51,18 @@ const GamesPage = () => {
   const handleCreateGame = async (e) => {
     e.preventDefault();
 
+    const gameData = {
+      ...newGame,
+      rules: newGame.rules || "Default rule",
+    };
+
     console.log("Submitting game:", newGame);
 
     try {
       const createdGame = await gameService.createGame(newGame);
       console.log("Game Created:", createdGame);
       setGames([...games, createdGame]); // Update state with new game
-      setNewGame({ title: "", description: "" });
+      setNewGame({ title: "", description: "", rules: "" });
     } catch (error) {
       console.error("Failed to create game:", error);
       setError("Failed to create game.");
@@ -100,6 +105,17 @@ const GamesPage = () => {
               required
             />
           </Form.Group>
+          <Form.Group controlId="gameRules">
+          <Form.Label>Rules</Form.Label>
+          <Form.Control
+              as="textarea"
+              rows={2}
+              value={newGame.rules}
+              onChange={(e) => setNewGame({ ...newGame, rules: e.target.value })}
+              required
+            />
+          </Form.Group>
+
           <Button type="submit" className="mt-2">Add Game</Button>
         </Form>
       )}
