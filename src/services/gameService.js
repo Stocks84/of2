@@ -95,6 +95,40 @@ const gameService = {
       throw error;
     }
   },
+
+  // Like or Unlike a game
+likeGame: async (gameId) => {
+  try {
+    const response = await api.post(`/api/games/${gameId}/like/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error liking game ${gameId}:`, error);
+    throw error;
+  }
+},
+
+// Get comments for a game
+getComments: async (gameId) => {
+  try {
+    const response = await api.get(`/api/games/${gameId}/comments/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+},
+
+// Post a new comment
+postComment: async (gameId, content) => {
+  try {
+    const response = await api.post(`/api/games/${gameId}/comments/`, { content });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting comment:", error);
+    throw error;
+  }
+},
+
 };
 
 export default gameService;
