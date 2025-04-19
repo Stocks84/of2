@@ -111,7 +111,7 @@ likeGame: async (gameId) => {
 getComments: async (gameId) => {
   try {
     const response = await api.get(`/api/games/${gameId}/comments/`);
-    return response.data;
+    return response.data.results;
   } catch (error) {
     console.error("Error fetching comments:", error);
     throw error;
@@ -121,10 +121,12 @@ getComments: async (gameId) => {
 // Post a new comment
 postComment: async (gameId, content) => {
   try {
-    const response = await api.post(`/api/games/${gameId}/comments/`, { content });
+    const response = await api.post(`/api/games/${gameId}/comment/`, { 
+      text: content
+    });
     return response.data;
   } catch (error) {
-    console.error("Error posting comment:", error);
+    console.error("Error posting comment:", error.response?.data || error.message);
     throw error;
   }
 },
