@@ -16,7 +16,11 @@ const GameDetailsPage = () => {
   const [likeLoading, setLikeLoading] = useState(false);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
 
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editText, setEditText] = useState("");
+  
   const userLoggedIn = isAuthenticated();
+  const currentUsername = localStorage.getItem("username"); // Assuming you store username on login
 
   const fetchGameData = async () => {
     try {
@@ -55,7 +59,7 @@ const GameDetailsPage = () => {
     try {
       setLikeLoading(true);
       await gameService.likeGame(id);
-      await fetchGameData(); // Refresh game data to get updated like count
+      await fetchGameData();
     } catch (err) {
       console.error("Failed to like game:", err);
     } finally {
@@ -76,6 +80,33 @@ const GameDetailsPage = () => {
       console.error("Failed to post comment:", err);
     } finally {
       setCommentSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await gameService.deleteComment(commentId);
+      await fetchComments();
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+    }
+  };
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment.id);
+    setEditText(comment.text);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editText.trim()) return;
+
+    try {
+      await gameService.editComment(editingCommentId, editText);
+      setEditingCommentId(null);
+      setEditText("");
+      await fetchComments();
+    } catch (err) {
+      console.error("Failed to edit comment:", err);
     }
   };
 
@@ -107,12 +138,52 @@ const GameDetailsPage = () => {
           {comments.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
-            comments.map((comment) => (
-              <div key={comment.id} className="mb-3 border-bottom pb-2">
-                <strong>{comment.user}</strong>: {comment.text}
-              </div>
-            ))
+            comments.map((comment) => {
+              console.log("Comment User:", comment.user, "Current User:", currentUsername);
+              
+              return (
+                <div key={comment.id} className="mb-3 border-bottom pb-2">
+                  <strong>{comment.user}</strong>:
+                  
+                  {editingCommentId === comment.id ? (
+                    <Form.Control
+                      as="textarea"
+                      rows={2}
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                      className="mt-2"
+                    />
+                  ) : (
+                    <p>{comment.text}</p>
+                  )}
+            
+                  {/* Only show buttons if the comment was made by the logged-in user */}
+                  {userLoggedIn && comment.user === currentUsername && (
+                    <div className="d-flex gap-2 mt-1">
+                      {editingCommentId === comment.id ? (
+                        <>
+                          <Button size="sm" onClick={handleSaveEdit}>Save</Button>
+                          <Button size="sm" variant="secondary" onClick={() => setEditingCommentId(null)}>
+                            Cancel
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button size="sm" variant="outline-primary" onClick={() => handleEditComment(comment)}>
+                            Edit
+                          </Button>
+                          <Button size="sm" variant="outline-danger" onClick={() => handleDeleteComment(comment.id)}>
+                            Delete
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )}
+            
 
           {userLoggedIn ? (
             <Form onSubmit={handleCommentSubmit} className="mt-3">
@@ -126,12 +197,7 @@ const GameDetailsPage = () => {
                   required
                 />
               </Form.Group>
-              <Button
-                type="submit"
-                variant="success"
-                disabled={commentSubmitting}
-                className="mt-2"
-              >
+              <Button type="submit" variant="success" disabled={commentSubmitting} className="mt-2">
                 {commentSubmitting ? "Posting..." : "Post Comment"}
               </Button>
             </Form>
@@ -147,5 +213,6 @@ const GameDetailsPage = () => {
 };
 
 export default GameDetailsPage;
+
 
 
