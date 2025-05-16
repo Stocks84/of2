@@ -12,13 +12,18 @@ export const loginUser = async (credentials) => {
           localStorage.setItem('access_token', response.data.access);
           localStorage.setItem('refresh_token', response.data.refresh);
           console.log("Tokens saved to localStorage!");
+
+          const userProfile = await api.get("/api/profile", {
+            headers: { "Authorization": `Bearer ${response.data.access}` }
+          });
+
+          // Save username and user ID to localStorage
+          localStorage.setItem("username", userProfile.data.username);
+          localStorage.setItem("userId", userProfile.data.id);
+          console.log("User Profile saved:", userProfile.data);
         } else {
           console.error("Login response missing tokens:", response.data);
         }
-
-        const userProfile = await api.get("/api/profile", {
-          headers: { "Authorization": `Bearer ${response.data.access}` }
-        });
         
         // Dispatch global login event
         window.dispatchEvent(new Event("authChanged"));
@@ -45,6 +50,8 @@ export const registerUser = async (userData) => {
 export const logoutUser = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userId');
 
     // Dispatch global logout event
     window.dispatchEvent(new Event("authChanged"));

@@ -134,19 +134,19 @@ postComment: async (gameId, content) => {
 // Delete a comment
 deleteComment: async (commentId) => {
   try {
-    await api.delete(`/games/comments/${commentId}/`);
-    return true;
+    const response = await api.delete(`/api/games/comments/${commentId}/`);
+    return response.data;
   } catch (error) {
-    console.error("Error deleting comment:", error.response?.data || error.message);
+    console.error("Error deleting comment:", error.response?.data || error);
     throw error;
   }
 },
 
 // Edit a comment
-editComment: async (commentId, newText) => {
+editComment: async (commentId, text) => {
   try {
-    const response = await api.patch(`/games/comments/${commentId}/`, {
-      text: newText,
+    const response = await api.patch(`/api/games/comments/${commentId}/edit/`, {
+      text
     });
     return response.data;
   } catch (error) {
