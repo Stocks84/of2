@@ -131,6 +131,31 @@ postComment: async (gameId, content) => {
   }
 },
 
+// Delete a comment
+deleteComment: async (commentId) => {
+  try {
+    await api.delete(`/games/comments/${commentId}/`);
+    return true;
+  } catch (error) {
+    console.error("Error deleting comment:", error.response?.data || error.message);
+    throw error;
+  }
+},
+
+// Edit a comment
+editComment: async (commentId, newText) => {
+  try {
+    const response = await api.patch(`/games/comments/${commentId}/`, {
+      text: newText,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error editing comment:", error.response?.data || error.message);
+    throw error;
+  }
+},
+
+
 };
 
 export default gameService;
