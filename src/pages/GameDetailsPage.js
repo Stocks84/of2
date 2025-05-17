@@ -14,43 +14,34 @@ const GameDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [likeLoading, setLikeLoading] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
 
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState("");
-  
+
   const userLoggedIn = isAuthenticated();
-  const currentUsername = localStorage.getItem("username"); // Assuming you store username on login
-
-  const fetchGameData = async () => {
-    try {
-      const gameData = await gameService.getGameById(id);
-      setGame(gameData);
-    } catch (err) {
-      setError("Failed to load game details.");
-    }
-  };
-
-  const fetchComments = async () => {
-    try {
-      const commentsData = await gameService.getComments(id);
-      setComments(commentsData);
-    } catch (err) {
-      console.error("Failed to load comments:", err);
-    }
-  };
+  const currentUsername = localStorage.getItem("username");
 
   useEffect(() => {
-    const fetchAll = async () => {
-      setLoading(true);
-      await fetchGameData();
-      await fetchComments();
-      setLoading(false);
+    const fetchGameData = async () => {
+      try {
+        setLoading(true);
+        const gameData = await gameService.getGameById(id);
+        setGame(gameData);
+        setLiked(gameData.is_liked || false);
+        const commentsData = await gameService.getComments(id);
+        setComments(commentsData);
+      } catch (err) {
+        setError("Failed to load game details.");
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchAll();
+    fetchGameData();
   }, [id]);
 
-  const handleLike = async () => {
+  const handleLikeToggle = async () => {
     if (!userLoggedIn) {
       alert("Please log in to like this game.");
       return;
@@ -58,10 +49,18 @@ const GameDetailsPage = () => {
 
     try {
       setLikeLoading(true);
-      await gameService.likeGame(id);
-      await fetchGameData();
+      if (liked) {
+        await gameService.unlikeGame(id);
+        setLiked(false);
+        setGame((prev) => ({ ...prev, likes_count: prev.likes_count - 1 }));
+      } else {
+        await gameService.likeGame(id);
+        setLiked(true);
+        setGame((prev) => ({ ...prev, likes_count: prev.likes_count + 1 }));
+      }
     } catch (err) {
-      console.error("Failed to like game:", err);
+      console.error("Failed to toggle like:", err);
+      setError("Unable to toggle like. Please try again.");
     } finally {
       setLikeLoading(false);
     }
@@ -73,22 +72,26 @@ const GameDetailsPage = () => {
 
     try {
       setCommentSubmitting(true);
-      await gameService.postComment(id, newComment);
+      const comment = await gameService.postComment(id, newComment);
+      setComments((prev) => [...prev, comment]);
       setNewComment("");
-      await fetchComments();
     } catch (err) {
       console.error("Failed to post comment:", err);
+      setError("Unable to post comment. Please try again.");
     } finally {
       setCommentSubmitting(false);
     }
   };
 
   const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+    
     try {
       await gameService.deleteComment(commentId);
-      await fetchComments();
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
     } catch (err) {
       console.error("Failed to delete comment:", err);
+      setError("Unable to delete comment. Please try again.");
     }
   };
 
@@ -102,11 +105,16 @@ const GameDetailsPage = () => {
 
     try {
       await gameService.editComment(editingCommentId, editText);
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === editingCommentId ? { ...comment, text: editText } : comment
+        )
+      );
       setEditingCommentId(null);
       setEditText("");
-      await fetchComments();
     } catch (err) {
       console.error("Failed to edit comment:", err);
+      setError("Unable to save comment. Please try again.");
     }
   };
 
@@ -123,11 +131,11 @@ const GameDetailsPage = () => {
           <Card.Text>{game.description}</Card.Text>
           <p><strong>Created by:</strong> {game.creator}</p>
           <Button
-            variant="outline-primary"
-            onClick={handleLike}
+            variant={liked ? "primary" : "outline-primary"}
+            onClick={handleLikeToggle}
             disabled={likeLoading || !userLoggedIn}
           >
-            👍 Like ({game.likes_count || 0})
+            👍 {liked ? "Unlike" : "Like"} ({game.likes_count || 0})
           </Button>
         </Card.Body>
       </Card>
@@ -138,73 +146,55 @@ const GameDetailsPage = () => {
           {comments.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
-            comments.map((comment) => {
-              console.log("Comment User:", comment.user, "Current User:", currentUsername);
-              
-              return (
-                <div key={comment.id} className="mb-3 border-bottom pb-2">
-                  <strong>{comment.user}</strong>:
-                  
-                  {editingCommentId === comment.id ? (
-                    <Form.Control
-                      as="textarea"
-                      rows={2}
-                      value={editText}
-                      onChange={(e) => setEditText(e.target.value)}
-                      className="mt-2"
-                    />
-                  ) : (
-                    <p>{comment.text}</p>
-                  )}
-            
-                  {/* Only show buttons if the comment was made by the logged-in user */}
-                  {userLoggedIn && comment.user === currentUsername && (
-                    <div className="d-flex gap-2 mt-1">
-                      {editingCommentId === comment.id ? (
-                        <>
-                          <Button size="sm" onClick={handleSaveEdit}>Save</Button>
-                          <Button size="sm" variant="secondary" onClick={() => setEditingCommentId(null)}>
-                            Cancel
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button size="sm" variant="outline-primary" onClick={() => handleEditComment(comment)}>
-                            Edit
-                          </Button>
-                          <Button size="sm" variant="outline-danger" onClick={() => handleDeleteComment(comment.id)}>
-                            Delete
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })
+            comments.map((comment) => (
+              <div key={comment.id} className="mb-3 border-bottom pb-2">
+                <strong>{comment.user}</strong>:
+                {editingCommentId === comment.id ? (
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    className="mt-2"
+                  />
+                ) : (
+                  <p>{comment.text}</p>
+                )}
+                {userLoggedIn && comment.user === currentUsername && (
+                  <div className="d-flex gap-2 mt-1">
+                    {editingCommentId === comment.id ? (
+                      <>
+                        <Button size="sm" onClick={handleSaveEdit}>Save</Button>
+                        <Button size="sm" variant="secondary" onClick={() => setEditingCommentId(null)}>Cancel</Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button size="sm" variant="outline-primary" onClick={() => handleEditComment(comment)}>Edit</Button>
+                        <Button size="sm" variant="outline-danger" onClick={() => handleDeleteComment(comment.id)}>Delete</Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))
           )}
-            
 
           {userLoggedIn ? (
             <Form onSubmit={handleCommentSubmit} className="mt-3">
-              <Form.Group controlId="newComment">
-                <Form.Control
-                  as="textarea"
-                  rows={2}
-                  placeholder="Add a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  required
-                />
-              </Form.Group>
-              <Button type="submit" variant="success" disabled={commentSubmitting} className="mt-2">
+              <Form.Control
+                as="textarea"
+                rows={2}
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                required
+              />
+              <Button type="submit" variant="success" className="mt-2" disabled={commentSubmitting}>
                 {commentSubmitting ? "Posting..." : "Post Comment"}
               </Button>
             </Form>
           ) : (
-            <Alert variant="info" className="mt-3">
-              Log in to post a comment.
-            </Alert>
+            <Alert variant="info" className="mt-3">Log in to post a comment.</Alert>
           )}
         </Card.Body>
       </Card>
@@ -213,6 +203,3 @@ const GameDetailsPage = () => {
 };
 
 export default GameDetailsPage;
-
-
-

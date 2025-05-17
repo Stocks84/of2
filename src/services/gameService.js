@@ -15,8 +15,7 @@ const gameService = {
 
   getGameById: async (id) => {
     try {
-      if (!id) throw new Error("Game ID is required.")
-      console.log(`Fetching game details for ID:`, id);
+      if (!id) throw new Error("Game ID is required.");
       const response = await api.get(`${API_URL}${id}/`);
       return response.data;
     } catch (error) {
@@ -27,9 +26,7 @@ const gameService = {
 
   getUserProfile: async () => {
     try {
-      console.log("Fetching user profile...");
-      const response = await api.get("http://127.0.0.1:8000/api/profile/"); // Adjust the endpoint if needed
-      console.log("User profile Response:", response.data);
+      const response = await api.get("http://127.0.0.1:8000/api/profile/");
       return response.data;
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -39,30 +36,18 @@ const gameService = {
   
   getUserGames: async () => {
     try {
-      console.log("Fetching only the user's games...");
       const response = await api.get("http://127.0.0.1:8000/api/games/", {
-        params: { user_games: "true" }, // Ensure correct query param
+        params: { user_games: "true" },
       });
-  
-      console.log("Full API Response:", response.data);
-  
-      if (response.data.results && Array.isArray(response.data.results)) {
-        return response.data.results; // Extract only the array
-      } else {
-        console.error("Unexpected response format:", response.data);
-        return []; // Return an empty array to avoid .map() errors
-      }
+      return response.data.results || [];
     } catch (error) {
       console.error("Error fetching user's games:", error);
       throw error;
     }
   },
-  
 
   createGame: async (gameData) => {
     try {
-      console.log("Sending game data:", gameData);
-
       const response = await api.post(`${API_URL}`, gameData, {
         headers: {
           "Content-Type": "application/json",
@@ -96,66 +81,90 @@ const gameService = {
     }
   },
 
-  // Like or Unlike a game
-likeGame: async (gameId) => {
-  try {
-    const response = await api.post(`/api/games/${gameId}/like/`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error liking game ${gameId}:`, error);
-    throw error;
+  // Get comments for a game
+  getComments: async (gameId) => {
+    try {
+      const response = await api.get(`/api/games/${gameId}/comments/`);
+      return response.data.results;
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      throw error;
+    }
+  },
+
+  // Post a new comment
+  postComment: async (gameId, content) => {
+    try {
+      const response = await api.post(`/api/games/${gameId}/comment/`, { 
+        text: content
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error posting comment:", error.response?.data || error.message);
+      throw error;
+    }
+  },
+
+  // Delete a comment
+  deleteComment: async (commentId) => {
+    try {
+      const response = await api.delete(`/api/games/comments/${commentId}/`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting comment:", error.response?.data || error);
+      throw error;
+    }
+  },
+
+  // Edit a comment
+  editComment: async (commentId, text) => {
+    try {
+      const response = await api.patch(`/api/games/comments/${commentId}/edit/`, {
+        text
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error editing comment:", error.response?.data || error.message);
+      throw error;
+    }
   }
-},
-
-// Get comments for a game
-getComments: async (gameId) => {
-  try {
-    const response = await api.get(`/api/games/${gameId}/comments/`);
-    return response.data.results;
-  } catch (error) {
-    console.error("Error fetching comments:", error);
-    throw error;
-  }
-},
-
-// Post a new comment
-postComment: async (gameId, content) => {
-  try {
-    const response = await api.post(`/api/games/${gameId}/comment/`, { 
-      text: content
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error posting comment:", error.response?.data || error.message);
-    throw error;
-  }
-},
-
-// Delete a comment
-deleteComment: async (commentId) => {
-  try {
-    const response = await api.delete(`/api/games/comments/${commentId}/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error deleting comment:", error.response?.data || error);
-    throw error;
-  }
-},
-
-// Edit a comment
-editComment: async (commentId, text) => {
-  try {
-    const response = await api.patch(`/api/games/comments/${commentId}/edit/`, {
-      text
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error editing comment:", error.response?.data || error.message);
-    throw error;
-  }
-},
-
-
 };
+
+// Like a Game (POST)
+const likeGame = async (gameId) => {
+  try {
+    const response = await api.post(`/api/games/${gameId}/like/`, {}, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Ensure this is correctly set
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error liking game ${gameId}:`, error.response?.data || error);
+    throw error;
+  }
+};
+
+// Unlike a Game (DELETE)
+const unlikeGame = async (gameId) => {
+  try {
+    const response = await api.delete(`/api/games/${gameId}/unlike/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Ensure this is correctly set
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error unliking game ${gameId}:`, error.response?.data || error);
+    throw error;
+  }
+};
+
+
+// Add likeGame and unlikeGame to the gameService object
+gameService.likeGame = likeGame;
+gameService.unlikeGame = unlikeGame;
 
 export default gameService;
