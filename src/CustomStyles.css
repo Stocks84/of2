@@ -16,7 +16,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Form Labels and Text */
 label, p, .form-text, .card-text, .card-title {
-  color: #e0e0e0 !important;
+  color: black !important;
 }
 
 /* Cards and Form Containers */

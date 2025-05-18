@@ -130,6 +130,7 @@ const GameDetailsPage = () => {
           <Card.Title>{game?.title}</Card.Title>
           <Card.Text>{game?.description}</Card.Text>
           <p><strong>Created by:</strong> {game?.creator}</p>
+          <p><strong>Rules:</strong> {game?.rules}</p>
           <Button 
             onClick={handleLikeToggle} 
             disabled={likeLoading}
@@ -164,8 +165,8 @@ const GameDetailsPage = () => {
                       onChange={(e) => setEditText(e.target.value)} 
                       style={{ backgroundColor: theme.backgroundColor, color: theme.textColor }}
                     />
-                    <Button onClick={handleSaveEdit} className="mt-2">Save</Button>
-                    <Button onClick={handleCancelEdit} className="mt-2 ms-2" variant="secondary">Cancel</Button>
+                    <Button onClick={handleSaveEdit} className="mt-2" style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}>Save</Button>
+                    <Button onClick={handleCancelEdit} variant="secondary" className="mt-2 ms-2">Cancel</Button>
                   </>
                 ) : (
                   <p>{comment.text}</p>
@@ -173,7 +174,7 @@ const GameDetailsPage = () => {
 
                 {userLoggedIn && comment.user === currentUsername && !editingCommentId && (
                   <div className="d-flex gap-2 mt-1">
-                    <Button onClick={() => handleEditComment(comment)}>Edit</Button>
+                    <Button onClick={() => handleEditComment(comment)} style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}>Edit</Button>
                     <Button onClick={() => handleDeleteComment(comment.id)} variant="danger">Delete</Button>
                   </div>
                 )}
@@ -181,7 +182,6 @@ const GameDetailsPage = () => {
             ))
           )}
 
-          {/* Add Comment Form */}
           {userLoggedIn ? (
             <Form onSubmit={handleCommentSubmit} className="mt-3">
               <Form.Control
@@ -191,8 +191,16 @@ const GameDetailsPage = () => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 className="custom-placeholder"
+                style={{ backgroundColor: theme.backgroundColor, color: theme.textColor, borderColor: "#444" }}
               />
-              <Button type="submit" className="mt-2 w-100">Post Comment</Button>
+              <Button 
+                type="submit" 
+                className="mt-2 w-100" 
+                disabled={commentSubmitting}
+                style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
+              >
+                {commentSubmitting ? "Posting..." : "Post Comment"}
+              </Button>
             </Form>
           ) : (
             <Alert variant="info" className="mt-3">Log in to post a comment.</Alert>
