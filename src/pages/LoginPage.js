@@ -1,7 +1,9 @@
+// src/pages/LoginPage.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import { Container, Form, Button, Alert } from "react-bootstrap";
+import theme from "../theme";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -17,7 +19,7 @@ const LoginPage = () => {
     setError(null);
     try {
       await loginUser(formData);
-      navigate("/profile"); // Redirect to profile after successful login
+      navigate("/profile");
     } catch (err) {
       setError("Invalid username or password. Please try again.");
     }
@@ -25,38 +27,40 @@ const LoginPage = () => {
 
   return (
     <Container className="mt-5">
-      <h2 className="text-center">Login</h2>
-      <Form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "400px" }}>
+      <div className="form-container">
+        <h2 className="text-center" style={{ color: theme.textColor }}>Login</h2>
         {error && <Alert variant="danger">{error}</Alert>}
 
-        <Form.Group className="mb-3">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="Enter your username"
-            required
-          />
-        </Form.Group>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              style={{ backgroundColor: theme.backgroundColor, color: theme.textColor }}
+              required
+            />
+          </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-          />
-        </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              style={{ backgroundColor: theme.backgroundColor, color: theme.textColor }}
+              required
+            />
+          </Form.Group>
 
-        <Button variant="primary" type="submit" className="w-100">
-          Login
-        </Button>
-      </Form>
+          <Button type="submit" className="w-100" style={{ backgroundColor: theme.primaryColor }}>
+            Login
+          </Button>
+        </Form>
+      </div>
     </Container>
   );
 };

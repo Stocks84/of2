@@ -1,13 +1,15 @@
+// src/pages/GameDetailsPage.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, Spinner, Alert, Form } from "react-bootstrap";
 import gameService from "../services/gameService";
 import { isAuthenticated } from "../services/authService";
+import theme from "../theme";
+import '../CustomStyles.css';
 
 const GameDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [game, setGame] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -16,7 +18,6 @@ const GameDetailsPage = () => {
   const [likeLoading, setLikeLoading] = useState(false);
   const [liked, setLiked] = useState(false);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
-
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editText, setEditText] = useState("");
 
@@ -29,7 +30,7 @@ const GameDetailsPage = () => {
         setLoading(true);
         const gameData = await gameService.getGameById(id);
         setGame(gameData);
-        setLiked(gameData.is_liked || false);
+        setLiked(gameData?.is_liked || false);
         const commentsData = await gameService.getComments(id);
         setComments(commentsData);
       } catch (err) {
@@ -47,8 +48,8 @@ const GameDetailsPage = () => {
       return;
     }
 
+    setLikeLoading(true);
     try {
-      setLikeLoading(true);
       if (liked) {
         await gameService.unlikeGame(id);
         setLiked(false);
@@ -58,9 +59,6 @@ const GameDetailsPage = () => {
         setLiked(true);
         setGame((prev) => ({ ...prev, likes_count: prev.likes_count + 1 }));
       }
-    } catch (err) {
-      console.error("Failed to toggle like:", err);
-      setError("Unable to toggle like. Please try again.");
     } finally {
       setLikeLoading(false);
     }
@@ -70,14 +68,11 @@ const GameDetailsPage = () => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
+    setCommentSubmitting(true);
     try {
-      setCommentSubmitting(true);
       const comment = await gameService.postComment(id, newComment);
-      setComments((prev) => [...prev, comment]);
+      setComments([...comments, comment]);
       setNewComment("");
-    } catch (err) {
-      console.error("Failed to post comment:", err);
-      setError("Unable to post comment. Please try again.");
     } finally {
       setCommentSubmitting(false);
     }
@@ -85,13 +80,12 @@ const GameDetailsPage = () => {
 
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm("Are you sure you want to delete this comment?")) return;
-    
+
     try {
       await gameService.deleteComment(commentId);
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
-    } catch (err) {
-      console.error("Failed to delete comment:", err);
-      setError("Unable to delete comment. Please try again.");
+    } catch {
+      setError("Failed to delete comment.");
     }
   };
 
@@ -112,36 +106,48 @@ const GameDetailsPage = () => {
       );
       setEditingCommentId(null);
       setEditText("");
-    } catch (err) {
-      console.error("Failed to edit comment:", err);
-      setError("Unable to save comment. Please try again.");
+    } catch {
+      setError("Failed to save comment.");
     }
   };
 
-  if (loading) return <Spinner animation="border" className="mt-4" />;
-  if (error) return <Alert variant="danger" className="mt-4">{error}</Alert>;
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditText("");
+  };
 
   return (
     <div className="container mt-4">
-      <Button variant="secondary" onClick={() => navigate("/")}>← Back</Button>
+      <Button 
+        onClick={() => navigate("/")} 
+        style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
+      >
+        ← Back
+      </Button>
 
-      <Card className="mt-3">
+      <Card className="mt-4" style={{ backgroundColor: theme.secondaryColor, color: theme.textColor }}>
         <Card.Body>
-          <Card.Title>{game.title}</Card.Title>
-          <Card.Text>{game.description}</Card.Text>
-          <p><strong>Created by:</strong> {game.creator}</p>
-          <Button
-            variant={liked ? "primary" : "outline-primary"}
-            onClick={handleLikeToggle}
-            disabled={likeLoading || !userLoggedIn}
+          <Card.Title>{game?.title}</Card.Title>
+          <Card.Text>{game?.description}</Card.Text>
+          <p><strong>Created by:</strong> {game?.creator}</p>
+          <Button 
+            onClick={handleLikeToggle} 
+            disabled={likeLoading}
+            style={{ 
+              backgroundColor: liked ? theme.primaryColor : theme.secondaryColor, 
+              color: liked ? "#fff" : theme.textColor,
+              borderColor: liked ? theme.primaryColor : theme.textColor
+            }}
           >
-            👍 {liked ? "Unlike" : "Like"} ({game.likes_count || 0})
+            👍 {liked ? "Unlike" : "Like"} ({game?.likes_count || 0})
           </Button>
         </Card.Body>
       </Card>
 
-      <Card className="mt-4">
-        <Card.Header>Comments</Card.Header>
+      <Card className="mt-4" style={{ backgroundColor: theme.secondaryColor, color: theme.textColor }}>
+        <Card.Header style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}>
+          Comments
+        </Card.Header>
         <Card.Body>
           {comments.length === 0 ? (
             <p>No comments yet.</p>
@@ -150,48 +156,43 @@ const GameDetailsPage = () => {
               <div key={comment.id} className="mb-3 border-bottom pb-2">
                 <strong>{comment.user}</strong>:
                 {editingCommentId === comment.id ? (
-                  <Form.Control
-                    as="textarea"
-                    rows={2}
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    className="mt-2"
-                  />
+                  <>
+                    <Form.Control 
+                      as="textarea" 
+                      rows={2} 
+                      value={editText} 
+                      onChange={(e) => setEditText(e.target.value)} 
+                      style={{ backgroundColor: theme.backgroundColor, color: theme.textColor }}
+                    />
+                    <Button onClick={handleSaveEdit} className="mt-2">Save</Button>
+                    <Button onClick={handleCancelEdit} className="mt-2 ms-2" variant="secondary">Cancel</Button>
+                  </>
                 ) : (
                   <p>{comment.text}</p>
                 )}
-                {userLoggedIn && comment.user === currentUsername && (
+
+                {userLoggedIn && comment.user === currentUsername && !editingCommentId && (
                   <div className="d-flex gap-2 mt-1">
-                    {editingCommentId === comment.id ? (
-                      <>
-                        <Button size="sm" onClick={handleSaveEdit}>Save</Button>
-                        <Button size="sm" variant="secondary" onClick={() => setEditingCommentId(null)}>Cancel</Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button size="sm" variant="outline-primary" onClick={() => handleEditComment(comment)}>Edit</Button>
-                        <Button size="sm" variant="outline-danger" onClick={() => handleDeleteComment(comment.id)}>Delete</Button>
-                      </>
-                    )}
+                    <Button onClick={() => handleEditComment(comment)}>Edit</Button>
+                    <Button onClick={() => handleDeleteComment(comment.id)} variant="danger">Delete</Button>
                   </div>
                 )}
               </div>
             ))
           )}
 
+          {/* Add Comment Form */}
           {userLoggedIn ? (
             <Form onSubmit={handleCommentSubmit} className="mt-3">
               <Form.Control
                 as="textarea"
-                rows={2}
+                rows={3}
                 placeholder="Add a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                required
+                className="custom-placeholder"
               />
-              <Button type="submit" variant="success" className="mt-2" disabled={commentSubmitting}>
-                {commentSubmitting ? "Posting..." : "Post Comment"}
-              </Button>
+              <Button type="submit" className="mt-2 w-100">Post Comment</Button>
             </Form>
           ) : (
             <Alert variant="info" className="mt-3">Log in to post a comment.</Alert>
@@ -203,3 +204,4 @@ const GameDetailsPage = () => {
 };
 
 export default GameDetailsPage;
+

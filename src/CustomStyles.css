@@ -1,59 +1,89 @@
 /* src/CustomStyles.css */
 
-/* Body Background */
+/* Global Smokey Background */
 body {
-    background-color: #2a2d34;
-    font-family: 'Roboto', sans-serif;
-    color: #e0e0e0;
-  }
-  
-  /* Form Styling */
-  .form-container {
-    background-color: #3c3f44;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    color: #e0e0e0;
-  }
-  
-  /* Input Fields */
-  .form-container input,
-  .form-container textarea {
-    background-color: #2a2d34;
-    color: #e0e0e0;
-    border: 1px solid #444;
-    border-radius: 6px;
-  }
-  
-  /* Buttons */
-  .btn-primary {
-    background-color: #e76f51;
-    border-color: #e76f51;
-  }
-  
-  .btn-primary:hover {
-    background-color: #d65b3d;
-  }
-  
-  /* Cards */
-  .card {
-    background-color: #3c3f44;
-    border: 1px solid #444;
-    color: #e0e0e0;
-    border-radius: 8px;
-  }
-  
-  /* Navbar */
-  .navbar {
-    background-color: #2a2d34;
-  }
-  
-  .navbar-brand,
-  .navbar-nav .nav-link {
-    color: #e0e0e0 !important;
-  }
-  
-  .navbar-nav .nav-link:hover {
-    color: #e76f51 !important;
-  }
-  
+  background-color: #2a2d34 !important;
+  font-family: 'Roboto', sans-serif;
+  color: #e0e0e0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Headings (Light Color) */
+h1, h2, h3, h4, h5, h6 {
+  color: #f0f0f0 !important;
+}
+
+/* Form Labels and Text */
+label, p, .form-text, .card-text, .card-title {
+  color: #e0e0e0 !important;
+}
+
+/* Cards and Form Containers */
+.card, .form-container {
+  background-color: #3c3f44;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+
+/* Textarea and Input Fields */
+textarea, input {
+  background-color: #2a2d34 !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #444 !important;
+}
+
+textarea::placeholder, input::placeholder {
+  color: #c0c0c0 !important;
+  opacity: 1 !important;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #e76f51 !important;
+  border-color: #e76f51 !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover {
+  background-color: #d65b3d !important;
+  border-color: #d65b3d !important;
+}
+
+.btn-danger {
+  background-color: #d65b3d !important;
+  border-color: #d65b3d !important;
+  color: #ffffff !important;
+}
+
+.btn-danger:hover {
+  background-color: #e76f51 !important;
+  border-color: #e76f51 !important;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #2a2d34;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #e0e0e0 !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #e76f51 !important;
+}
+
+/* Card Headers */
+.card-header {
+  background-color: #3c3f44 !important;
+  color: #f0f0f0 !important;
+}
+
+/* Form Label Adjustment */
+.form-label {
+  color: #e0e0e0 !important;
+  font-weight: bold;
+}
