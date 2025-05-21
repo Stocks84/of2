@@ -16,11 +16,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Form Labels and Text */
 label, p, .form-text, .card-text, .card-title {
-  color: black !important;
+  color: darkgray !important;
 }
 
 /* Cards and Form Containers */
-.card, .form-container {
+.card, .card-body, .form-container {
   background-color: #3c3f44;
   color: #e0e0e0;
   border: 1px solid #444;
