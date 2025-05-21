@@ -1,4 +1,3 @@
-// src/pages/GameDetailsPage.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, Spinner, Alert, Form } from "react-bootstrap";

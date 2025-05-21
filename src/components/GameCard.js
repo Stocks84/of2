@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { useNavigate  } from "react-router-dom";
-import placeholderImage from "../assets/Placeholder.png"; // Placeholder image
+import placeholderImage from "../assets/Placeholder.png";
 import theme from "../theme";
 
 const GameCard = ({ id, title, description, rules }) => {

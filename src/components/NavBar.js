@@ -1,10 +1,9 @@
-// src/components/NavBar.js
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/OF-logo.png";
 import { isAuthenticated, logoutUser } from "../services/authService";
-import theme from "../theme"; // Import the theme
+import theme from "../theme"; 
 
 const NavBar = () => {
   const navigate = useNavigate();

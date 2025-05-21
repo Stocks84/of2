@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE_URL = "http://127.0.0.1:8000/";
 const api = axios.create({ baseURL: API_BASE_URL });
 
-// ✅ Automatically add JWT token to every request
+// Automatically add JWT token to every request
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("access_token");
@@ -15,7 +15,7 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// ✅ Automatically refresh expired tokens
+// Automatically refresh expired tokens
 api.interceptors.response.use(
     response => response,
     async error => {
@@ -33,7 +33,7 @@ api.interceptors.response.use(
                     return Promise.reject(error);
                 }
 
-                // ✅ Request a new access token
+                // Request a new access token
                 const refreshResponse = await axios.post(`${API_BASE_URL}api/token/refresh/`, {
                     refresh: refreshToken,
                 });
@@ -41,7 +41,7 @@ api.interceptors.response.use(
                 const newAccessToken = refreshResponse.data.access;
                 localStorage.setItem("access_token", newAccessToken);
 
-                // ✅ Retry the original request with the new token
+                // Retry the original request with the new token
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
             } catch (refreshError) {
