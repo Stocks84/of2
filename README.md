@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# [OLD FASHION](https://INSERT LATER)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Old Fashion is a community-driven web platform where users can discover, share, and engage with a variety of drinking games. Designed for a social audience, the site allows registered users to upload their own game ideas, comment on others, and like their favorites. Each user has a personalized profile showcasing their bio, favorite drink, and uploaded games. Whether you're looking for a fun game for your next party or want to share your own creation, Old Fashion is your go-to spot for all things party games — with a stylish, pub-inspired design.
 
-## Available Scripts
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Stocks84/!!!!!!!)](https://github.com/Stocks84/!!!!!!/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Stocks84/!!!!!!!!)](https://github.com/Stocks84/!!!!!!!/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/Stocks84/!!!!!!!!)](https://github.com/Stocks84/!!!!)
 
-In the project directory, you can run:
+![screenshot](documentation/mockup.png)
 
-### `npm start`
+source: [amiresponsive](https://ui.dev/amiresponsive?url=https://!!!!!!!!.herokuapp.com)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## UX
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+For the SKP design I had to consider the USER’S needs:
+-	Website to be simple,
+-	Easily fluid to get around the site,
+-	Keep their data secure,
+-	Option for the owner to have an administration section private only for the owner,
+-	Implement CRUD design features & where needed defensive programming.
 
-### `npm test`
+### Colour Scheme
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The color scheme for Old Fashion is inspired by the warm, inviting atmosphere of a classic pub or cocktail lounge. We went with deep, smoky tones paired with subtle golds and warm neutrals to evoke a sense of nostalgia and laid-back social energy — much like the drink it's named after. These colors help create a cozy, stylish environment that encourages users to explore, contribute, and connect. The overall goal was to balance readability with aesthetic, while giving the site a unique personality that feels both fun and mature.
 
-### `npm run build`
+### Typography
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+For Old Fashion, we chose a typeface that blends modern clarity with vintage charm to complement the site's theme. The primary font is clean and easy to read on all screen sizes, ensuring accessibility without sacrificing style. 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## User Stories
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-   As a User I can view a navbar from every page so that I can navigate easily between pages
+-   As a user I can create a new account so that I can access all the features for signed up user
+-   As a user I can sign in to the app so that I can access functionality for logged in users
+-   As a user I can tell if I am logged in or not so that I can log in if I need to
+-   As a user I can view the details of a single post so that I can learn more about it
+-   As a logged out user I can see sign in and sign up options so that I can sign in/sign up
+-   As a logged in user I can like a post so that I can show my support for the posts that interest me
+-   As a logged in user I can create posts so that I can share my game with the world
 
-### `npm run eject`
+## Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Existing Features
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Sign Up-#1**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    - Once clicked on the navigation bar. The sign up form appears. If not filled correctly pop ups appear informing the user that the field has not been entered or the passwords do not match. Once completed correctly a confirmation message appears. Then a redirect to the login page. 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+![screenshot](documentation/features/feature.01.png)
 
-## Learn More
+- **Login-#2**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    - Once correct user information is added you are then redirected to the profile page. If in correct login details are added a message will appear informing that the users login information is incorrect.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![screenshot](documentation/features/feature.02.png)
 
-### Code Splitting
+- **User Profile-#3/4**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    - If logged in, you are able to edit your profile or delete your account.
+    - Once edited youcan either save changes or cancel.
+    - If you delete your account a message will appear to confirm your choice.
+    - Login button is now changed to Logout on the navigation bar.
 
-### Analyzing the Bundle Size
+![screenshot](documentation/features/feature.03.png)
+![screenshot](documentation/features/feature.04.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Games-#5/6**
 
-### Making a Progressive Web App
+    - This is where all the users games are stored.
+    - They are able to add a new game or delete an exsiting game.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+![screenshot](documentation/features/feature.05.png)
+![screenshot](documentation/features/feature.06.png)
 
-### Advanced Configuration
+- **Home-#7**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    - This is where all the games are stored.
+    - You are able to get here via the navigation home button or via the Old Fashion title in the top left      corner.
+    - Access to the view details of the game.
 
-### Deployment
+![screenshot](documentation/features/feature.07.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **Game Details-#8/9/10**
 
-### `npm run build` fails to minify
+    - This is where the user can view the rules, description, the likes, and comments.
+    - The user is able to leave a like, or unlike a game.
+    - Add a comment and view comments.
+    - Edit their comment.
+    - Delete their comment with a confirmation message.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![screenshot](documentation/features/feature.08.png)
+![screenshot](documentation/features/feature.09.png)
+![screenshot](documentation/features/feature.10.png)
+
+- **Mobile View-#11**
+
+    - For navigation there is a drop down menu.
+
+![screenshot](documentation/features/feature.11.png)
