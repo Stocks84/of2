@@ -15,15 +15,24 @@ export const getUserProfile = async () => {
     }
 };
 
-// Update user profile
 export const updateUserProfile = async (profileData) => {
     console.log("Sending profile data:", profileData);
+
     try {
-        const response = await api.patch("/api/profile/", profileData, {
+        // Make a shallow copy to avoid mutating the original
+        const cleanedData = { ...profileData };
+
+        // If profile_picture is not a File, remove it
+        if (!(cleanedData.profile_picture instanceof File)) {
+            delete cleanedData.profile_picture;
+        }
+
+        const response = await api.patch("/api/profile/", cleanedData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`
             }
         });
+
         console.log("Profile update successful:", response.data);
         return response.data;
     } catch (error) {
@@ -31,6 +40,7 @@ export const updateUserProfile = async (profileData) => {
         throw error;
     }
 };
+
 
 
 // Delete user account
