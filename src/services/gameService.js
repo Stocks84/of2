@@ -1,6 +1,6 @@
 import api from './api';
 
-const API_URL = "drf-old-fashion-118da20fd480.herokuapp.com/api/";
+const API_URL = "/api/games/";
 
 const gameService = {
   getGames: async (page = 1, limit = 10) => {
@@ -26,17 +26,17 @@ const gameService = {
 
   getUserProfile: async () => {
     try {
-      const response = await api.get("drf-old-fashion-118da20fd480.herokuapp.com/api/profile/");
+      const response = await api.get("/api/profile/");
       return response.data;
     } catch (error) {
       console.error("Error fetching user profile:", error);
       throw error;
     }
   },
-  
+
   getUserGames: async () => {
     try {
-      const response = await api.get("drf-old-fashion-118da20fd480.herokuapp.com/api/games/", {
+      const response = await api.get("/api/games/", {
         params: { user_games: "true" },
       });
       return response.data.results || [];
@@ -48,7 +48,7 @@ const gameService = {
 
   createGame: async (gameData) => {
     try {
-      const response = await api.post(`${API_URL}`, gameData, {
+      const response = await api.post(API_URL, gameData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -81,7 +81,6 @@ const gameService = {
     }
   },
 
-  // Get comments for a game
   getComments: async (gameId) => {
     try {
       const response = await api.get(`/api/games/${gameId}/comments/`);
@@ -92,7 +91,6 @@ const gameService = {
     }
   },
 
-  // Post a new comment
   postComment: async (gameId, content) => {
     try {
       const response = await api.post(`/api/games/${gameId}/comment/`, { 
@@ -105,7 +103,6 @@ const gameService = {
     }
   },
 
-  // Delete a comment
   deleteComment: async (commentId) => {
     try {
       const response = await api.delete(`/api/games/comments/${commentId}/`);
@@ -116,7 +113,6 @@ const gameService = {
     }
   },
 
-  // Edit a comment
   editComment: async (commentId, text) => {
     try {
       const response = await api.patch(`/api/games/comments/${commentId}/edit/`, {
@@ -127,44 +123,38 @@ const gameService = {
       console.error("Error editing comment:", error.response?.data || error.message);
       throw error;
     }
-  }
+  },
+
+  likeGame: async (gameId) => {
+    try {
+      const response = await api.post(`/api/games/${gameId}/like/`, {}, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error liking game ${gameId}:`, error.response?.data || error);
+      throw error;
+    }
+  },
+
+  unlikeGame: async (gameId) => {
+    try {
+      const response = await api.delete(`/api/games/${gameId}/unlike/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error unliking game ${gameId}:`, error.response?.data || error);
+      throw error;
+    }
+  },
 };
-
-// Like a Game (POST)
-const likeGame = async (gameId) => {
-  try {
-    const response = await api.post(`/api/games/${gameId}/like/`, {}, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Ensure this is correctly set
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`Error liking game ${gameId}:`, error.response?.data || error);
-    throw error;
-  }
-};
-
-// Unlike a Game (DELETE)
-const unlikeGame = async (gameId) => {
-  try {
-    const response = await api.delete(`/api/games/${gameId}/unlike/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Ensure this is correctly set
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`Error unliking game ${gameId}:`, error.response?.data || error);
-    throw error;
-  }
-};
-
-
-// Add likeGame and unlikeGame to the gameService object
-gameService.likeGame = likeGame;
-gameService.unlikeGame = unlikeGame;
 
 export default gameService;
+
