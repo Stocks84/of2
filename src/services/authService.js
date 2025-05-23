@@ -41,6 +41,7 @@ export const registerUser = async (userData) => {
       const response = await api.post("/api/register/", userData);
       return response.data;
     } catch (error) {
+      console.error("Registration error:", error.response?.data || error.message); 
       throw error.response?.data || { detail: "Something went wrong" };
     }
   };
