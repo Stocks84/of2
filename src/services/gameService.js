@@ -1,6 +1,6 @@
 import api from './api';
 
-const API_URL = "http://127.0.0.1:8000/api/games/";
+const API_URL = "drf-old-fashion-118da20fd480.herokuapp.com/api/";
 
 const gameService = {
   getGames: async (page = 1, limit = 10) => {
@@ -26,7 +26,7 @@ const gameService = {
 
   getUserProfile: async () => {
     try {
-      const response = await api.get("http://127.0.0.1:8000/api/profile/");
+      const response = await api.get("drf-old-fashion-118da20fd480.herokuapp.com/api/profile/");
       return response.data;
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -36,7 +36,7 @@ const gameService = {
   
   getUserGames: async () => {
     try {
-      const response = await api.get("http://127.0.0.1:8000/api/games/", {
+      const response = await api.get("drf-old-fashion-118da20fd480.herokuapp.com/api/games/", {
         params: { user_games: "true" },
       });
       return response.data.results || [];
