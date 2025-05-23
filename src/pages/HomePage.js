@@ -21,7 +21,10 @@ const HomePage = () => {
   
       setGames((prevGames) => {
         const existingIds = new Set(prevGames.map(game => game.id));
-        const newGames = response.results.filter(game => !existingIds.has(game.id));
+        const newGames = Array.isArray(response.results)
+          ? response.results.filter(game => !existingIds.has(game.id))
+          : [];
+
         return [...prevGames, ...newGames];  // Avoid duplicates
       });
   
