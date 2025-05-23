@@ -1,7 +1,12 @@
 import axios from "axios";
 
 const API_BASE_URL = "drf-old-fashion-118da20fd480.herokuapp.com";
-const api = axios.create({ baseURL: API_BASE_URL });
+const api = axios.create({ 
+    baseURL: API_BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+    },
+});
 
 // Automatically add JWT token to every request
 api.interceptors.request.use(
