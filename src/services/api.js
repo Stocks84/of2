@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://drf-old-fashion-118da20fd480.herokuapp.com";
+const API_BASE_URL = "https://drf-old-fashion-118da20fd480.herokuapp.com/";
 const api = axios.create({ 
     baseURL: API_BASE_URL,
     headers: {
