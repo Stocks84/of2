@@ -1,14 +1,14 @@
-# [OLD FASHION](https://INSERT LATER)
+# [OLD FASHION](https://stocks84.github.io/of2/)
 
 Old Fashion is a community-driven web platform where users can discover, share, and engage with a variety of drinking games. Designed for a social audience, the site allows registered users to upload their own game ideas, comment on others, and like their favorites. Each user has a personalized profile showcasing their bio, favorite drink, and uploaded games. Whether you're looking for a fun game for your next party or want to share your own creation, Old Fashion is your go-to spot for all things party games — with a stylish, pub-inspired design.
 
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Stocks84/!!!!!!!)](https://github.com/Stocks84/!!!!!!/commits/main)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Stocks84/!!!!!!!!)](https://github.com/Stocks84/!!!!!!!/commits/main)
-[![GitHub repo size](https://img.shields.io/github/repo-size/Stocks84/!!!!!!!!)](https://github.com/Stocks84/!!!!)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Stocks84/of2)](https://github.com/Stocks84/of2/commits/main)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Stocks84/of2)](https://github.com/Stocks84/of2/commits/main)
+[![GitHub repo size](https://img.shields.io/github/repo-size/Stocks84/of2)](https://github.com/Stocks84/of2)
 
 ![screenshot](documentation/mockup.png)
 
-source: [amiresponsive](https://ui.dev/amiresponsive?url=https://!!!!!!!!.herokuapp.com)
+source: [amiresponsive](https://ui.dev/amiresponsive?url=https://old-fashion-9638ea885cfe.herokuapp.com/)
 
 ## UX
 
@@ -165,7 +165,7 @@ For Old Fashion, we chose a typeface that blends modern clarity with vintage cha
 
 ### GitHub Projects
 
-[GitHub Projects](https://github.com/Stocks84/!!!!!!/projects) served as an Agile tool for this project.
+[GitHub Projects](https://github.com/Stocks84/of2/projects) served as an Agile tool for this project.
 It isn't a specialized tool, but with the right tags and project creation/issue assignments, it can be made to work.
 
 Through it, user stories, issues, and milestone tasks were planned, then tracked on a weekly basis using the basic Kanban board.
@@ -174,16 +174,16 @@ Through it, user stories, issues, and milestone tasks were planned, then tracked
 
 ### GitHub Issues
 
-[GitHub Issues](https://github.com/Stocks84/!!!!!!/issues) served as an another Agile tool.
+[GitHub Issues](https://github.com/Stocks84/of2/issues) served as an another Agile tool.
 There, I used my own **User Story Template** to manage user stories.
 
 It also helped with milestone iterations on a weekly basis.
 
-- [Open Issues](https://github.com/Stocks84/!!!!!!!!!/issues) [![GitHub issues](https://img.shields.io/github/issues/Stocks84/!!!!!!!!!)](https://github.com/Stocks84/!!!!!!!!/issues)
+- [Open Issues](https://github.com/Stocks84/of2/issues) [![GitHub issues](https://img.shields.io/github/issues/Stocks84/of2)](https://github.com/Stocks84/of2/issues)
 
    
 
-- [Closed Issues](https://github.com/Stocks84/!!!!!!!!/issues?q=is%3Aissue+is%3Aclosed) [![GitHub closed issues](https://img.shields.io/github/issues-closed/Stocks84/!!!!!!!!)](https://github.com/Stocks84/!!!!!!!!!/issues?q=is%3Aissue+is%3Aclosed)
+- [Closed Issues](https://github.com/Stocks84/of2/issues?q=is%3Aissue+is%3Aclosed) [![GitHub closed issues](https://img.shields.io/github/issues-closed/Stocks84/of2)](https://github.com/Stocks84/of2/issues?q=is%3Aissue+is%3Aclosed)
 
 ## Testing
 
@@ -192,7 +192,7 @@ It also helped with milestone iterations on a weekly basis.
 
 ## Deployment
 
-The live deployed application can be found deployed on [Heroku](https://!!!!!!!!!!!.herokuapp.com).
+The live deployed application can be found deployed on [Heroku](https://old-fashion-9638ea885cfe.herokuapp.com/).
 
 ### Heroku Deployment
 
@@ -294,18 +294,18 @@ Once the project is cloned or forked, in order to run it locally, you'll need to
 
 You can clone the repository by following these steps:
 
-1. Go to the [GitHub repository](https://github.com/Stocks84/!!!!!!!!!!) 
+1. Go to the [GitHub repository](https://github.com/Stocks84/of2) 
 2. Locate the Code button above the list of files and click it 
 3. Select if you prefer to clone using HTTPS, SSH, or GitHub CLI and click the copy button to copy the URL to your clipboard
 4. Open Git Bash or Terminal
 5. Change the current working directory to the one where you want the cloned directory
 6. In your IDE Terminal, type the following command to clone my repository:
-    - `git clone https://github.com/Stocks84/!!!!!!!!!.git`
+    - `git clone https://github.com/Stocks84/of2.git`
 7. Press Enter to create your local clone.
 
 Alternatively, if using Gitpod, you can click below to create your own workspace using this repository.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Stocks84/!!!!!!!!!!!!)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Stocks84/of2)
 
 Please note that in order to directly open the project in Gitpod, you need to have the browser extension installed.
 A tutorial on how to do that can be found [here](https://www.gitpod.io/docs/configure/user-settings/browser-extension).
@@ -315,7 +315,7 @@ A tutorial on how to do that can be found [here](https://www.gitpod.io/docs/conf
 By forking the GitHub Repository, we make a copy of the original repository on our GitHub account to view and/or make changes without affecting the original owner's repository.
 You can fork this repository by using the following steps:
 
-1. Log in to GitHub and locate the [GitHub Repository](https://github.com/Stocks84/!!!!!!!!!!!!)
+1. Log in to GitHub and locate the [GitHub Repository](https://github.com/Stocks84/of2)
 2. At the top of the Repository (not top of page) just above the "Settings" Button on the menu, locate the "Fork" Button.
 3. Once clicked, you should now have a copy of the original repository in your own GitHub account!
 
