@@ -1,27 +1,36 @@
 // src/pages/LoginPage.js
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 import theme from "../theme";
+import Notification from "../components/Notification";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
-  const [error, setError] = useState(null);
+  const [notification, setNotification] = useState({ message: "", variant: "" });
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    if (location.state?.notice) {
+      setNotification({ message: location.state.notice, variant: "success" });
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setNotification({ message: "", variant: "" });
     try {
       await loginUser(formData);
-      navigate("/profile");
+      setNotification({ message: "Logged in successfully.", variant: "success" });
+      setTimeout(() => navigate("/profile"), 800);
     } catch (err) {
-      setError("Invalid username or password. Please try again.");
+      setNotification({ message: "Invalid username or password. Please try again.", variant: "danger" });
     }
   };
 
@@ -29,7 +38,12 @@ const LoginPage = () => {
     <Container className="mt-5">
       <div className="form-container">
         <h2 className="text-center" style={{ color: theme.textColor }}>Login</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
+
+        <Notification
+          message={notification.message}
+          variant={notification.variant}
+          onClose={() => setNotification({ message: "", variant: "" })}
+        />
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">

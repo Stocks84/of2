@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import gameService from "../services/gameService";
 import { isAuthenticated } from "../services/authService";
 import { Button, Form, Card, Container, Row, Col } from "react-bootstrap";
+import Notification from "../components/Notification";
 
 const GamesPage = () => {
   const userLoggedIn = isAuthenticated();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [newGame, setNewGame] = useState({ title: "", description: "" });
-  const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null); // Store logged-in user's ID
+  const [newGame, setNewGame] = useState({ title: "", description: "", rules: "" });
+  const [notification, setNotification] = useState({ message: "", variant: "" });
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     if (userLoggedIn) {
@@ -20,29 +21,16 @@ const GamesPage = () => {
   const fetchUserGames = async () => {
     try {
       setLoading(true);
-      console.log("Fetching user games...");
-
-      // Fetch only the user's games directly
       const userGames = await gameService.getUserGames();
-
-      console.log("API Response (user games):", userGames);
-      
       if (!Array.isArray(userGames)) {
-        console.error("Error: Expected an array, but got:", userGames);
-        setError("Invalid API response format.");
+        setNotification({ message: "Invalid API response format.", variant: "danger" });
         return;
       }
-
       setGames(userGames);
-
-      // Fetch user profile to get their ID (only once)
       const userProfile = await gameService.getUserProfile();
       setUserId(userProfile.id);
-
-      console.log("User Games Fetched:", userGames);
     } catch (error) {
-      console.error("Error fetching user's games:", error);
-      setError("Failed to load games.");
+      setNotification({ message: "Failed to load games.", variant: "danger" });
     } finally {
       setLoading(false);
     }
@@ -50,32 +38,24 @@ const GamesPage = () => {
 
   const handleCreateGame = async (e) => {
     e.preventDefault();
-
-    const gameData = {
-      ...newGame,
-      rules: newGame.rules || "Default rule",
-    };
-
-    console.log("Submitting game:", newGame);
-
     try {
       const createdGame = await gameService.createGame(newGame);
-      console.log("Game Created:", createdGame);
-      setGames([...games, createdGame]); // Update state with new game
+      setGames([...games, createdGame]);
       setNewGame({ title: "", description: "", rules: "" });
+      setNotification({ message: "Game created successfully.", variant: "success" });
     } catch (error) {
-      console.error("Failed to create game:", error);
-      setError("Failed to create game.");
+      setNotification({ message: "Failed to create game.", variant: "danger" });
     }
   };
 
   const handleDeleteGame = async (gameId) => {
+    if (!window.confirm("Delete this game?")) return;
     try {
       await gameService.deleteGame(gameId);
-      setGames(games.filter((game) => game.id !== gameId)); // Remove from state
+      setGames(games.filter((game) => game.id !== gameId));
+      setNotification({ message: "Game deleted.", variant: "success" });
     } catch (error) {
-      console.error("Failed to delete game:", error);
-      setError("Failed to delete game.");
+      setNotification({ message: "Failed to delete game.", variant: "danger" });
     }
   };
 
@@ -83,10 +63,15 @@ const GamesPage = () => {
     <Container>
       <h2 className="mt-4">My Games</h2>
 
-      {/* Show the form only if logged in */}
+      <Notification
+        message={notification.message}
+        variant={notification.variant}
+        onClose={() => setNotification({ message: "", variant: "" })}
+      />
+
       {userLoggedIn && (
         <Form onSubmit={handleCreateGame} className="mb-4">
-          <Form.Group controlId="gameTitle">
+          <Form.Group controlId="gameTitle" className="mb-2">
             <Form.Label>Title</Form.Label>
             <Form.Control
               type="text"
@@ -95,7 +80,7 @@ const GamesPage = () => {
               required
             />
           </Form.Group>
-          <Form.Group controlId="gameDescription">
+          <Form.Group controlId="gameDescription" className="mb-2">
             <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
@@ -105,9 +90,9 @@ const GamesPage = () => {
               required
             />
           </Form.Group>
-          <Form.Group controlId="gameRules">
-          <Form.Label>Rules</Form.Label>
-          <Form.Control
+          <Form.Group controlId="gameRules" className="mb-2">
+            <Form.Label>Rules</Form.Label>
+            <Form.Control
               as="textarea"
               rows={2}
               value={newGame.rules}
@@ -120,7 +105,6 @@ const GamesPage = () => {
         </Form>
       )}
 
-      {/* Display Games */}
       {loading ? (
         <p>Loading games...</p>
       ) : games.length === 0 ? (
@@ -133,9 +117,7 @@ const GamesPage = () => {
                 <Card.Body>
                   <Card.Title>{game.title}</Card.Title>
                   <Card.Text>{game.description}</Card.Text>
-
-                  {/* Show delete button only if logged in and it's the user's game */}
-                  {userLoggedIn && game.creator === userId && ( // Use 'creator' not 'owner'
+                  {userLoggedIn && game.creator === userId && (
                     <Button variant="danger" onClick={() => handleDeleteGame(game.id)}>
                       Delete
                     </Button>
@@ -146,12 +128,8 @@ const GamesPage = () => {
           ))}
         </Row>
       )}
-
-      {error && <p className="text-danger">{error}</p>}
     </Container>
   );
 };
 
 export default GamesPage;
-
-

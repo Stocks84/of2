@@ -1,36 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import gameService from "../services/gameService";
 import GameCard from "../components/GameCard";
+import Notification from "../components/Notification";
 
 const HomePage = () => {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [notification, setNotification] = useState({ message: "", variant: "" });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    fetchGames();
-  }, []);
+  useEffect(() => { fetchGames(); }, []);
 
   const fetchGames = async (nextPage = 1) => {
     try {
       setLoading(true);
       const response = await gameService.getGames(nextPage, 6);
-  
-      setGames((prevGames) => {
-        const existingIds = new Set(prevGames.map(game => game.id));
-        const newGames = Array.isArray(response.results)
-          ? response.results.filter(game => !existingIds.has(game.id))
-          : [];
 
-        return [...prevGames, ...newGames];  // Avoid duplicates
+      setGames((prevGames) => {
+        const existingIds = new Set(prevGames.map((game) => game.id));
+        const newGames = Array.isArray(response.results)
+          ? response.results.filter((game) => !existingIds.has(game.id))
+          : [];
+        return [...prevGames, ...newGames];
       });
-  
+
       setHasMore(response.next !== null);
     } catch (error) {
-      setError("Failed to load games. Please try again later.");
+      setNotification({ message: "Failed to load games. Please try again later.", variant: "danger" });
     } finally {
       setLoading(false);
     }
@@ -44,7 +42,13 @@ const HomePage = () => {
   return (
     <Container className="mt-4">
       <h2 className="mb-4">Drinking Games</h2>
-      {error && <Alert variant="danger">{error}</Alert>}
+
+      <Notification
+        message={notification.message}
+        variant={notification.variant}
+        onClose={() => setNotification({ message: "", variant: "" })}
+      />
+
       <Row>
         {games.map((game) => (
           <Col key={game.id} md={4} sm={6} xs={12} className="mb-3">
@@ -52,7 +56,9 @@ const HomePage = () => {
           </Col>
         ))}
       </Row>
+
       {loading && <Spinner animation="border" />}
+
       {hasMore && !loading && (
         <div className="text-center mt-3">
           <Button onClick={loadMoreGames} variant="primary">
