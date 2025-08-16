@@ -38,6 +38,15 @@ textarea::placeholder, input::placeholder {
   opacity: 1 !important;
 }
 
+/* Improve toggler visibility on dark navbars */
+.navbar-dark .navbar-toggler {
+  border-color: #e0e0e0 !important;
+}
+
+.navbar-dark .navbar-toggler-icon {
+  filter: invert(1) grayscale(100%);
+}
+
 /* Button Styles */
 .btn-primary {
   background-color: #e76f51 !important;
