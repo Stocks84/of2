@@ -46,10 +46,10 @@ export const updateUserProfile = async (profileData) => {
 // Delete user account
 export const deleteUserAccount = async () => {
     try {
-        const response = await api.delete("/api/profile/");
+        const response = await api.delete("/api/delete-account/");
         return response.data;
     } catch (error) {
-        console.error("Error deleting account:", error);
+        console.error("Error deleting account:", error.response?.data || error.message);
         throw error;
     }
 };
