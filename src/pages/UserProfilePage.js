@@ -1,6 +1,7 @@
 // src/pages/UserProfilePage.js
 import React, { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile, deleteUserAccount } from "../services/userService";
+import { logoutUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import Notification from "../components/Notification";
@@ -56,18 +57,22 @@ const UserProfilePage = () => {
   const [notification, setNotification] = useState({ message: "", variant: "" });
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete your account?")) {
-      try {
-        await deleteUserAccount();
-        localStorage.removeItem("access_token");
-        setNotification({ message: "Account deleted successfully.", variant: "success" });
-        // redirect after a short delay so the user sees the success message
-        setTimeout(() => navigate("/"), 1500);
-      } catch (err) {
-        setNotification({ message: "Failed to delete account.", variant: "danger" });
-      }
+    if (!window.confirm("Are you sure you want to delete your account?")) return;
+  
+    try {
+      // Delete account on the server
+      await deleteUserAccount();
+  
+      // Immediately log out locally (clear tokens, username, header)
+      logoutUser();
+  
+      // Redirect with a message
+      navigate("/login", { state: { notice: "Your account was deleted successfully." } });
+    } catch (err) {
+      setNotification({ message: "Failed to delete account.", variant: "danger" });
     }
   };
+  
 
 
   if (loading) return <p>Loading profile...</p>;

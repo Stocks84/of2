@@ -54,6 +54,10 @@ export const logoutUser = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('userId');
 
+    if (api?.defaults.headers) {
+      delete api.defaults.headers.Authorization;
+    }
+
     // Dispatch global logout event
     window.dispatchEvent(new Event("authChanged"));
 };
