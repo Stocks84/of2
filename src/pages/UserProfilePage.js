@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile, deleteUserAccount } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Container, Alert } from "react-bootstrap";
+import Notification from "../components/Notification";
 import theme from "../theme";
 
 const UserProfilePage = () => {
@@ -52,18 +53,22 @@ const UserProfilePage = () => {
     }
   };
 
+  const [notification, setNotification] = useState({ message: "", variant: "" });
+
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
       try {
         await deleteUserAccount();
-        alert("Account deleted successfully.");
-        localStorage.removeItem('access_token');
-        navigate("/");
+        localStorage.removeItem("access_token");
+        setNotification({ message: "Account deleted successfully.", variant: "success" });
+        // redirect after a short delay so the user sees the success message
+        setTimeout(() => navigate("/"), 1500);
       } catch (err) {
-        alert("Failed to delete account.");
+        setNotification({ message: "Failed to delete account.", variant: "danger" });
       }
     }
   };
+
 
   if (loading) return <p>Loading profile...</p>;
   if (error) return <Alert variant="danger">{error}</Alert>;
@@ -85,6 +90,12 @@ const UserProfilePage = () => {
             <Button variant="danger" className="ms-2" onClick={handleDelete}>
               Delete Account
             </Button>
+
+            <Notification 
+              message={notification.message} 
+              variant={notification.variant} 
+              onClose={() => setNotification({ message: "", variant: "" })} 
+            />
           </div>
         ) : (
           <Form onSubmit={handleSubmit}>
