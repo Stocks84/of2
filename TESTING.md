@@ -51,3 +51,24 @@ I've tested my deployed project on multiple devices to check for responsiveness 
 | Mobile (DevTools) | ![screenshot](documentation/responsiveness/responsive-mobile-home.png) | Works as expected |
 | Tablet (DevTools) | ![screenshot](documentation/responsiveness/responsive-tablet-home.png) | Works as expected |
 | Desktop | ![screenshot](documentation/responsiveness/responsive-desktop-home.png) | Works as expected |
+
+
+### Manual Testing – Frontend
+
+| Feature         | Steps                                                                 | Expected Result                                     | Actual Result                                     | Pass/Fail | Screenshot |
+|-----------------|----------------------------------------------------------------------|-----------------------------------------------------|--------------------------------------------------|-----------|------------|
+| Sign Up         | Go to `/signup`, fill out form, submit                               | User account created and redirected to login page   | Works as expected                                | ✅ Pass   | ![Sign Up](documentation/testing/signup.png) |
+| Login           | Go to `/login`, enter valid credentials                              | Redirect to `/profile` page, navbar updates         | Works as expected                                | ✅ Pass   | ![Login](documentation/testing/login.png) |
+| Invalid Login   | Enter wrong password at `/login`                                     | Error message shown                                 | Error displayed correctly                        | ✅ Pass   | |
+| Logout          | Click "Logout" in navbar                                             | User logged out, redirected to `/login`             | Works as expected                                | ✅ Pass   | ![Logout](documentation/testing/logout.png) |
+| Navbar Links    | Click "Home", "Games", "Profile"                                     | Navigate to correct page                            | Works as expected                                | ✅ Pass   | |
+| Navbar (Mobile) | Resize window, open hamburger menu                                   | Menu expands, links visible                      umentation/testing/ visible                  | ✅ Pass    | ![Navbar Mobile](documentation/testing/navbar-mobile.png) |
+| Games List      | Go to `/games`                                                       | Games displayed in grid                             | Works as expected                                | ✅ Pass   | ![Games List](documentation/testing/games-list.png) |
+| Load More Games | Click "Load More" on homepage                                        | Additional games load without duplicates            | Works as expected                                | ✅ Pass   | |
+| Game Details    | Click a game card → `/games/:id`                                     | Game title, description, and comments displayed     | Works as expected                                | ✅ Pass   | ![Game Details](documentation/testing/game-details.png) |
+| Add Comment     | In Game Details, enter text and submit                               | Comment appears below game                          | Works as expected                                | ✅ Pass   | |
+| Delete Comment  | Click "Delete" on own comment                                        | Comment removed                                     | Works as expected                                | ✅ Pass   | |
+| Like/Unlike     | Click "Like" button, then "Unlike"                                   | Like count updates accordingly                      | Works as expected                                | ✅ Pass   | |
+| Profile View    | Go to `/profile`                                                     | User details displayed                              | Works as expected                                | ✅ Pass   | ![Profile View](documentation/testing/profile-view.png) |
+| Edit Profile    | On `/profile`, click "Edit Profile", change values, save             | Profile updates and displays new info               | Works as expected                                | ✅ Pass   | ![Edit Profile](documentation/testing/edit-profile.png) |
+| Delete Account  | On `/profile`, click "Delete Account" → confirm                      | Account deleted, redirected to `/`                  | Works as expected                                | ✅ Pass   | ![Delete Account](documentation/testing/delete-account.png) |
