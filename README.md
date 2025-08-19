@@ -199,6 +199,20 @@ This table links the functional requirements (FR) to the UX features/wireframes 
 
 - QR Code Sharing: Generate a QR code to quickly share a game with friends in person.
 
+## Reusable React Components
+
+To ensure modularity and maintainability, *Old Fashion* makes use of reusable React components across the site:
+
+- **NavBar.js** – Responsive navigation bar displayed on all pages (mobile and desktop friendly).  
+- **GameCard.js** – Used in game listings to display game preview (title, description, image).  
+- **GameDetails.js** – Displays individual game details, likes, and comments in a structured card layout.  
+- **LoginForm.js / SignUpForm.js** – Reusable form components with validation and error handling.  
+- **UserInfoCard.js** – Consistent layout for displaying user profile information.  
+- **Layout.js** – Provides consistent page structure and styling across views.
+
+These components are imported and reused in multiple pages, supporting a DRY (Don’t Repeat Yourself) codebase and improving scalability.
+
+
 ## Tools & Technologies Used
 
 - [![Gitpod](https://img.shields.io/badge/Gitpod-grey?logo=gitpod&logoColor=FFAE33)](https://gitpod.io) used as a cloud-based IDE for development.
