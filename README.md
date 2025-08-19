@@ -12,7 +12,7 @@ source: [amiresponsive](https://ui.dev/amiresponsive?url=https://old-fashion-963
 
 ## UX
 
-For the SKP design I had to consider the USER’S needs:
+For the Old fashion design I had to consider the USER’S needs:
 -	Website to be simple,
 -	Easily fluid to get around the site,
 -	Keep their data secure,
@@ -37,6 +37,62 @@ For Old Fashion, we chose a typeface that blends modern clarity with vintage cha
 -   As a logged out user I can see sign in and sign up options so that I can sign in/sign up
 -   As a logged in user I can like a post so that I can show my support for the posts that interest me
 -   As a logged in user I can create posts so that I can share my game with the world
+
+### Project Board Link
+
+You can track progress, issues, and tasks on the public GitHub Project Board:  
+👉 [View the Project Board](https://github.com/users/Stocks84/projects/11)  
+
+
+### Wireframes & Mockups
+
+The initial design of *Old Fashion* focused on simplicity and clarity, ensuring that users can quickly find games, interact with them, and manage their profiles.  
+
+- **Home Page Wireframe**  
+  Displays recent drinking games in a grid layout.  
+  ![](documentation/wireframes/homepage.png)
+  ![](documentation/wireframes/mobile.png)
+
+- **Game Details Page Wireframe**  
+  Shows full game description, rules, likes, and comments (with edit/delete options for owners).  
+  ![](documentation/wireframes/games.png)
+
+- **User Profile Page Wireframe**  
+  Provides profile info with options to update details, change password, and delete account.  
+  ![](documentation/wireframes/profile.png)
+
+- **Authentication Pages (Login / Sign Up)**  
+  Simple forms designed for clarity and validation feedback.  
+  ![](documentation/wireframes/signup.png)
+  ![](documentation/wireframes/login.png)
+
+### Design Reasoning
+
+- **Mobile-first**: The app was designed to be responsive, with a collapsible navbar and grid layouts that adapt from mobile → desktop.  
+- **Consistency**: Colors, typography, and buttons follow a shared `theme.js` for visual coherence.  
+- **Simplicity**: Wireframes are intentionally clean — prioritising usability over complex visuals.  
+- **User Flow**: Users can discover games without logging in, but must sign up/log in to interact (like, comment, CRUD).  
+
+### Requirements Traceability Table
+
+This table links the functional requirements (FR) to the UX features/wireframes that fulfill them.
+
+| **Requirement (FR)** | **Wireframe / UX Element**                           | **Implemented In** |
+|-----------------------|------------------------------------------------------|--------------------|
+| FR1 – Users can view all games | Home Page wireframe (grid)                         | `HomePage.js` |
+| FR2 – Users can view game details | Game Details wireframe (title, desc, rules)      | `GameDetailsPage.js` |
+| FR3 – Users can like/unlike games | Game Details wireframe (like button)             | `GameDetailsPage.js` |
+| FR4 – Users can comment on games | Game Details wireframe (comment form + list)     | `GameDetailsPage.js` |
+| FR5 – Users can edit/delete their comments | Game Details wireframe (edit/delete buttons) | `GameDetailsPage.js` |
+| FR6 – Users can register/login | Auth wireframes (sign up / login forms)           | `SignUpPage.js`, `LoginPage.js` |
+| FR7 – Users can update profile info | Profile wireframe (form for updating details)  | `UserProfilePage.js` |
+| FR8 – Users can change password | Profile wireframe (change password form)         | `UserProfilePage.js` |
+| FR9 – Users can delete their account | Profile wireframe (delete account button)     | `UserProfilePage.js` |
+| FR10 – Only owners can CRUD games | Games wireframe (delete button only visible to creator) | `GamesPage.js` |
+
+---
+
+
 
 ## Features
 
